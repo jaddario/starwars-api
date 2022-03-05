@@ -27,4 +27,13 @@ public class Planet {
     @Column(name = "MOVIE_APPEARANCES")
     private int movieAppearances;
 
+    public Planet from(PlanetDTO dto) {
+        return Planet.builder()
+                .id(dto.getId())
+                .name(dto.getName())
+                .weather(dto.getWeather())
+                .terrain(dto.getTerrain())
+                .movieAppearances(dto.getMovieAppearances())
+                .build();
+    }
 }
