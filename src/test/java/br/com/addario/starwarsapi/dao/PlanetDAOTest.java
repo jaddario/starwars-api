@@ -1,6 +1,6 @@
 package br.com.addario.starwarsapi.dao;
 
-import br.com.addario.starwarsapi.exceptions.DeletedPlanetException;
+import br.com.addario.starwarsapi.exceptions.PlanetNotFoundException;
 import br.com.addario.starwarsapi.model.Planet;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +33,7 @@ class PlanetDAOTest {
                 .build();
 
         planetDAO.insert(tatooine);
-        assertThat(planetDAO.listPlanets()).hasSize(1).contains(tatooine);
+        assertThat(planetDAO.listPlanets()).hasSize(2).contains(tatooine);
     }
 
     @Test
@@ -134,7 +134,7 @@ class PlanetDAOTest {
     @Sql(scripts = "classpath:/db/insert_planets.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldThrowExceptionTryingDeletingPlanetThatDoesNotExist() {
-        final DeletedPlanetException exception = assertThrows(DeletedPlanetException.class,
+        final PlanetNotFoundException exception = assertThrows(PlanetNotFoundException.class,
                 () -> planetDAO.deletePlanetByName("coruscant"));
         final List<Planet> foundPlanets = planetDAO.listPlanets();
         assertThat(foundPlanets).hasSize(2);

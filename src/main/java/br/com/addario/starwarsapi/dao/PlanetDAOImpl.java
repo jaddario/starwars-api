@@ -1,6 +1,6 @@
 package br.com.addario.starwarsapi.dao;
 
-import br.com.addario.starwarsapi.exceptions.DeletedPlanetException;
+import br.com.addario.starwarsapi.exceptions.PlanetNotFoundException;
 import br.com.addario.starwarsapi.model.Planet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -59,7 +60,7 @@ public class PlanetDAOImpl implements PlanetDAO {
     }
 
     @Override
-    public Planet updatePlanetName(String oldName, String newName) {
+    public Optional<Planet> updatePlanetName(String oldName, String newName) {
         throw new UnsupportedOperationException("This operation is not supported yet!");
     }
 
@@ -76,7 +77,7 @@ public class PlanetDAOImpl implements PlanetDAO {
                 .executeUpdate();
 
         if (deletedRows == 0)
-            throw new DeletedPlanetException(id);
+            throw new PlanetNotFoundException(id);
 
     }
 
@@ -93,6 +94,6 @@ public class PlanetDAOImpl implements PlanetDAO {
                 .executeUpdate();
 
         if (deletedRows == 0)
-            throw new DeletedPlanetException(name);
+            throw new PlanetNotFoundException(name);
     }
 }

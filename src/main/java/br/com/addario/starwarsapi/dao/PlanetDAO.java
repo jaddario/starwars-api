@@ -4,6 +4,7 @@ import br.com.addario.starwarsapi.model.Planet;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PlanetDAO {
@@ -15,7 +16,7 @@ public interface PlanetDAO {
 
     Planet findPlanetByName(String name);
 
-    Planet updatePlanetName(String oldName, String newName);
+    Optional<Planet> updatePlanetName(String oldName, String newName);
 
     void deletePlanetById(Long id);
 
