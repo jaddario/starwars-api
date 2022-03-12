@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-@RestController(value = "/planets")
+@RestController(value = "/api/v1/starwars")
 @RequiredArgsConstructor
 public class PlanetController {
 
