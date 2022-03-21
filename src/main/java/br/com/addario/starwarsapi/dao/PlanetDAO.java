@@ -12,9 +12,9 @@ public interface PlanetDAO {
 
     List<Planet> listPlanets();
 
-    Planet findPlanetById(Long id);
+    Optional<Planet> findPlanetById(Long id);
 
-    Planet findPlanetByName(String name);
+    Optional<Planet> findPlanetByName(String name);
 
     Optional<Planet> updatePlanetName(String oldName, String newName);
 

@@ -27,7 +27,7 @@ public class Planet {
     @Column(name = "MOVIE_APPEARANCES")
     private int movieAppearances;
 
-    public Planet from(PlanetDTO dto) {
+    public static Planet from(PlanetDTO dto) {
         return Planet.builder()
                 .id(dto.getId())
                 .name(dto.getName())

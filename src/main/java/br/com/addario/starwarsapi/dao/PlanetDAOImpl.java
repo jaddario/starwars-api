@@ -25,38 +25,36 @@ public class PlanetDAOImpl implements PlanetDAO {
     @Override
     public List<Planet> listPlanets() {
         final var sql = """
-                SELECT * 
-                    FROM PLANET
-                """;
-        return (List<Planet>) entityManager
-                .createNativeQuery(sql, Planet.class)
-                .getResultList();
+                        SELECT *
+                            FROM PLANET
+                        """;
+
+        return (List<Planet>) entityManager.createNativeQuery(sql, Planet.class).getResultList();
     }
 
     @Override
-    public Planet findPlanetById(Long id) {
+    public Optional<Planet> findPlanetById(Long id) {
         final var sql = """
-                SELECT *
-                    FROM PLANET
-                    WHERE ID = :id
-                """;
-        return (Planet) entityManager
-                .createNativeQuery(sql, Planet.class)
-                .setParameter("id", id)
-                .getSingleResult();
+                        SELECT *
+                            FROM PLANET
+                            WHERE ID = :id
+                        """;
+
+        return Optional.ofNullable((Planet) entityManager.createNativeQuery(sql, Planet.class)
+                                                         .setParameter("id", id)
+                                                         .getSingleResult());
     }
 
     @Override
-    public Planet findPlanetByName(String name) {
+    public Optional<Planet> findPlanetByName(String name) {
         final var sql = """ 
-                SELECT * 
-                    FROM PLANET 
-                    WHERE NAME = :name
-                """;
-        return (Planet) entityManager
-                .createNativeQuery(sql, Planet.class)
-                .setParameter("name", name)
-                .getSingleResult();
+                        SELECT * 
+                            FROM PLANET 
+                            WHERE NAME = :name
+                        """;
+        return Optional.ofNullable((Planet) entityManager.createNativeQuery(sql, Planet.class)
+                                                         .setParameter("name", name)
+                                                         .getSingleResult());
     }
 
     @Override
@@ -68,13 +66,13 @@ public class PlanetDAOImpl implements PlanetDAO {
     @Transactional
     public void deletePlanetById(Long id) {
         final var sql = """
-                DELETE FROM PLANET
-                WHERE ID = :id
-                """;
-        final int deletedRows = entityManager
-                .createNativeQuery(sql, Planet.class)
-                .setParameter("id", id)
-                .executeUpdate();
+                        DELETE FROM PLANET
+                        WHERE ID = :id
+                        """;
+        final int deletedRows =
+                entityManager.createNativeQuery(sql, Planet.class)
+                             .setParameter("id", id)
+                             .executeUpdate();
 
         if (deletedRows == 0)
             throw new PlanetNotFoundException(id);
@@ -85,13 +83,13 @@ public class PlanetDAOImpl implements PlanetDAO {
     @Transactional
     public void deletePlanetByName(String name) {
         final var sql = """
-                DELETE FROM PLANET
-                WHERE NAME = :name
-                """;
-        final int deletedRows = entityManager
-                .createNativeQuery(sql, Planet.class)
-                .setParameter("name", name)
-                .executeUpdate();
+                        DELETE FROM PLANET
+                        WHERE NAME = :name
+                        """;
+        final int deletedRows =
+                entityManager.createNativeQuery(sql, Planet.class)
+                             .setParameter("name", name)
+                             .executeUpdate();
 
         if (deletedRows == 0)
             throw new PlanetNotFoundException(name);

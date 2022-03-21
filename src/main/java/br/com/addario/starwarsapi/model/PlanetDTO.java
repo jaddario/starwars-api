@@ -16,7 +16,7 @@ public class PlanetDTO {
     private String terrain;
     private int movieAppearances;
 
-    public PlanetDTO from(Planet entity) {
+    public static PlanetDTO from(Planet entity) {
         return PlanetDTO.builder()
                 .id(entity.getId())
                 .name(entity.getName())

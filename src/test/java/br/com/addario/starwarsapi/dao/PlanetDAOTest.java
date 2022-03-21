@@ -42,20 +42,20 @@ class PlanetDAOTest {
     void shouldListAllPlanets() {
 
         var tatooine = Planet.builder()
-                .id(1L)
-                .name("tatooine")
-                .weather("arid")
-                .terrain("desert")
-                .movieAppearances(6)
-                .build();
+                             .id(1L)
+                             .name("tatooine")
+                             .weather("arid")
+                             .terrain("desert")
+                             .movieAppearances(6)
+                             .build();
 
         var naboo = Planet.builder()
-                .id(2L)
-                .name("naboo")
-                .weather("umid")
-                .terrain("forest")
-                .movieAppearances(3)
-                .build();
+                          .id(2L)
+                          .name("naboo")
+                          .weather("umid")
+                          .terrain("forest")
+                          .movieAppearances(3)
+                          .build();
 
         final List<Planet> expectedPlanets = List.of(tatooine, naboo);
         final List<Planet> foundPlanets = planetDAO.listPlanets();
@@ -69,14 +69,14 @@ class PlanetDAOTest {
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldFindTatooineById() {
         var tatooine = Planet.builder()
-                .id(1L)
-                .name("tatooine")
-                .weather("arid")
-                .terrain("desert")
-                .movieAppearances(6)
-                .build();
+                             .id(1L)
+                             .name("tatooine")
+                             .weather("arid")
+                             .terrain("desert")
+                             .movieAppearances(6)
+                             .build();
 
-        final Planet foundPlanet = planetDAO.findPlanetById(1L);
+        final Planet foundPlanet = planetDAO.findPlanetById(1L).get();
         assertThat(foundPlanet).isEqualTo(tatooine);
     }
 
@@ -86,14 +86,14 @@ class PlanetDAOTest {
     void shouldFindNabooByName() {
 
         var naboo = Planet.builder()
-                .id(2L)
-                .name("naboo")
-                .weather("umid")
-                .terrain("forest")
-                .movieAppearances(3)
-                .build();
+                          .id(2L)
+                          .name("naboo")
+                          .weather("umid")
+                          .terrain("forest")
+                          .movieAppearances(3)
+                          .build();
 
-        final Planet foundPlanet = planetDAO.findPlanetByName("naboo");
+        final Planet foundPlanet = planetDAO.findPlanetByName("naboo").get();
         assertThat(foundPlanet).isEqualTo(naboo);
     }
 
@@ -102,12 +102,12 @@ class PlanetDAOTest {
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldDeletePlanetById() {
         var tatooine = Planet.builder()
-                .id(1L)
-                .name("tatooine")
-                .weather("arid")
-                .terrain("desert")
-                .movieAppearances(6)
-                .build();
+                             .id(1L)
+                             .name("tatooine")
+                             .weather("arid")
+                             .terrain("desert")
+                             .movieAppearances(6)
+                             .build();
 
         planetDAO.deletePlanetById(1L);
         final List<Planet> foundPlanets = planetDAO.listPlanets();
@@ -119,12 +119,12 @@ class PlanetDAOTest {
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldDeletePlanetByName() {
         var naboo = Planet.builder()
-                .id(2L)
-                .name("naboo")
-                .weather("umid")
-                .terrain("forest")
-                .movieAppearances(3)
-                .build();
+                          .id(2L)
+                          .name("naboo")
+                          .weather("umid")
+                          .terrain("forest")
+                          .movieAppearances(3)
+                          .build();
         planetDAO.deletePlanetByName("naboo");
         final List<Planet> foundPlanets = planetDAO.listPlanets();
         assertThat(foundPlanets).hasSize(1).doesNotContain(naboo);
