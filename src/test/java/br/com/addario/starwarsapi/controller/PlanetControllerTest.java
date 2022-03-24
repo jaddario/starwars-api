@@ -1,21 +1,21 @@
 package br.com.addario.starwarsapi.controller;
 
+import br.com.addario.starwarsapi.dao.PlanetDAO;
 import br.com.addario.starwarsapi.model.PlanetDTO;
 import br.com.addario.starwarsapi.service.PlanetService;
+import org.aspectj.lang.annotation.Before;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -33,6 +33,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PlanetControllerTest {
 
     @MockBean
+    private PlanetDAO dao;
+
+    @MockBean
     private PlanetService service;
 
     @InjectMocks
@@ -40,6 +43,12 @@ class PlanetControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(service);
+
+    }
 
     @Test
     void shouldCreateValidPlanetAndReturn201Code() {
@@ -76,11 +85,11 @@ class PlanetControllerTest {
 
         mockMvc.perform(get("/planets/1"))
                .andExpect(status().isOk())
-               .andExpect(jsonPath("$", Matchers.hasSize(1)))
-               .andExpect(jsonPath("$[0].name", Matchers.is("planet1")))
-               .andExpect(jsonPath("$[0].terrain", Matchers.is("terrain")))
-               .andExpect(jsonPath("$[0].weather", Matchers.is("weather")))
-               .andExpect(jsonPath("$[0].movieAppearances", Matchers.is(1)));
+               .andExpect(jsonPath("$", Matchers.aMapWithSize(5)))
+               .andExpect(jsonPath("$.name", Matchers.is("planet1")))
+               .andExpect(jsonPath("$.terrain", Matchers.is("terrain")))
+               .andExpect(jsonPath("$.weather", Matchers.is("weather")))
+               .andExpect(jsonPath("$.movieAppearances", Matchers.is(1)));
     }
 
     private PlanetDTO createPlanet(Long id, String planetName) {
