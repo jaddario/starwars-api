@@ -2,19 +2,25 @@ package br.com.addario.starwarsapi.dao;
 
 import br.com.addario.starwarsapi.exceptions.PlanetNotFoundException;
 import br.com.addario.starwarsapi.model.Planet;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
 @Component
-@RequiredArgsConstructor
 public class PlanetDAOImpl implements PlanetDAO {
 
+    @PersistenceContext
     private final EntityManager entityManager;
+
+    @Autowired
+    public PlanetDAOImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     @Override
     @Transactional

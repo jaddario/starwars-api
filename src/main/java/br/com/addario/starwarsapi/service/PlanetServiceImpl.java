@@ -1,15 +1,15 @@
 package br.com.addario.starwarsapi.service;
 
 import br.com.addario.starwarsapi.dao.PlanetDAO;
+import br.com.addario.starwarsapi.exceptions.PlanetNotFoundException;
 import br.com.addario.starwarsapi.model.Planet;
 import br.com.addario.starwarsapi.model.PlanetDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class PlanetServiceImpl implements PlanetService {
 
@@ -22,33 +22,35 @@ public class PlanetServiceImpl implements PlanetService {
     }
 
     @Override
-    public List<Planet> listPlanets() {
-        return planetDAO.listPlanets();
+    public List<PlanetDTO> listPlanets() {
+        List<Planet> planets = planetDAO.listPlanets();
+        return planets.stream().map(PlanetDTO::from).toList();
     }
 
     @Override
-    public Optional<PlanetDTO> findPlanetById(Long id) {
-        var entity = planetDAO.findPlanetById(id);
-        return Optional.of(PlanetDTO.from(entity.get()));
+    public PlanetDTO findPlanetById(Long id) {
+        var planetEntityOptional = planetDAO.findPlanetById(id);
+        return planetEntityOptional.map(PlanetDTO::from).orElseThrow(() -> new PlanetNotFoundException(id));
     }
 
     @Override
-    public Optional<PlanetDTO> findPlanetByName(String name) {
-        return Optional.empty();
+    public PlanetDTO findPlanetByName(String name) {
+        var planetEntityOptional = planetDAO.findPlanetByName(name);
+        return planetEntityOptional.map(PlanetDTO::from).orElseThrow(() -> new PlanetNotFoundException(name));
     }
 
     @Override
-    public Optional<PlanetDTO> updatePlanetName(String oldName, String newName) {
-        return Optional.empty();
+    public void updatePlanetName(String oldName, String newName) {
+        planetDAO.updatePlanetName(oldName, newName);
     }
 
     @Override
     public void deletePlanetById(Long id) {
-
+        planetDAO.deletePlanetById(id);
     }
 
     @Override
     public void deletePlanetByName(String name) {
-
+        planetDAO.deletePlanetByName(name);
     }
 }
