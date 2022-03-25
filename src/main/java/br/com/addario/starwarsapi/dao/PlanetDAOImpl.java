@@ -2,6 +2,7 @@ package br.com.addario.starwarsapi.dao;
 
 import br.com.addario.starwarsapi.exceptions.PlanetNotFoundException;
 import br.com.addario.starwarsapi.model.Planet;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings("unchecked")
 @Component
 public class PlanetDAOImpl implements PlanetDAO {
 
@@ -38,6 +40,7 @@ public class PlanetDAOImpl implements PlanetDAO {
         return (List<Planet>) entityManager.createNativeQuery(sql, Planet.class).getResultList();
     }
 
+    @SneakyThrows
     @Override
     public Optional<Planet> findPlanetById(Long id) {
         final var sql = """
@@ -48,19 +51,26 @@ public class PlanetDAOImpl implements PlanetDAO {
 
         return Optional.ofNullable((Planet) entityManager.createNativeQuery(sql, Planet.class)
                                                          .setParameter("id", id)
-                                                         .getSingleResult());
+                                                         .getResultList()
+                                                         .stream()
+                                                         .findFirst()
+                                                         .orElseThrow(() -> new PlanetNotFoundException(id)));
     }
 
+    @SneakyThrows
     @Override
     public Optional<Planet> findPlanetByName(String name) {
         final var sql = """ 
-                        SELECT * 
-                            FROM PLANET 
+                        SELECT *
+                            FROM PLANET
                             WHERE NAME = :name
                         """;
         return Optional.ofNullable((Planet) entityManager.createNativeQuery(sql, Planet.class)
                                                          .setParameter("name", name)
-                                                         .getSingleResult());
+                                                         .getResultList()
+                                                         .stream()
+                                                         .findFirst()
+                                                         .orElseThrow(() -> new PlanetNotFoundException(name)));
     }
 
     @Override

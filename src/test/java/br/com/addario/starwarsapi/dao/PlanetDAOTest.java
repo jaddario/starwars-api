@@ -67,7 +67,7 @@ class PlanetDAOTest {
     @Test
     @Sql(scripts = "classpath:/db/insert_planets.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void shouldFindTatooineById() {
+    void shouldFindTatooineById() throws Exception {
         var tatooine = Planet.builder()
                              .id(1L)
                              .name("tatooine")
@@ -78,6 +78,16 @@ class PlanetDAOTest {
 
         final Planet foundPlanet = planetDAO.findPlanetById(1L).get();
         assertThat(foundPlanet).isEqualTo(tatooine);
+    }
+
+    @Test
+    @Sql(scripts = "classpath:/db/insert_planets.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void shouldNotFindTatooineByIdAndThrowException() {
+
+        assertThrows(PlanetNotFoundException.class,
+                () -> planetDAO.findPlanetById(6L), "There's no Planet with id 6");
+
     }
 
     @Test
@@ -95,6 +105,16 @@ class PlanetDAOTest {
 
         final Planet foundPlanet = planetDAO.findPlanetByName("naboo").get();
         assertThat(foundPlanet).isEqualTo(naboo);
+    }
+
+    @Test
+    @Sql(scripts = "classpath:/db/insert_planets.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void shouldNotFindTatooineByNameAndThrowException() {
+
+        assertThrows(PlanetNotFoundException.class,
+                () -> planetDAO.findPlanetByName("Unknown Planet"), "There's no Planet with name Unknown Planet");
+
     }
 
     @Test
@@ -126,7 +146,9 @@ class PlanetDAOTest {
                           .movieAppearances(3)
                           .build();
         planetDAO.deletePlanetByName("naboo");
+
         final List<Planet> foundPlanets = planetDAO.listPlanets();
+
         assertThat(foundPlanets).hasSize(1).doesNotContain(naboo);
     }
 
@@ -134,10 +156,11 @@ class PlanetDAOTest {
     @Sql(scripts = "classpath:/db/insert_planets.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldThrowExceptionTryingDeletingPlanetThatDoesNotExist() {
-        final PlanetNotFoundException exception = assertThrows(PlanetNotFoundException.class,
-                () -> planetDAO.deletePlanetByName("coruscant"));
+        assertThrows(PlanetNotFoundException.class,
+                () -> planetDAO.deletePlanetByName("coruscant"), "There's no Planet with name coruscant");
+
         final List<Planet> foundPlanets = planetDAO.listPlanets();
+
         assertThat(foundPlanets).hasSize(2);
-        assertThat(exception.getMessage()).isEqualTo("There's no Planet with name coruscant");
     }
 }

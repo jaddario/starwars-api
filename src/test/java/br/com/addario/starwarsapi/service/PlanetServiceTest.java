@@ -1,6 +1,7 @@
 package br.com.addario.starwarsapi.service;
 
 import br.com.addario.starwarsapi.dao.PlanetDAO;
+import br.com.addario.starwarsapi.exceptions.PlanetNotFoundException;
 import br.com.addario.starwarsapi.model.Planet;
 import br.com.addario.starwarsapi.model.PlanetDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -56,7 +58,7 @@ class PlanetServiceTest {
     }
 
     @Test
-    void shouldFindPlanetById() {
+    void shouldFindPlanetById() throws Exception {
         var expectedPlanet = createPlanetDTO(1L);
 
         when(dao.findPlanetById(1L)).thenReturn(Optional.ofNullable(Planet.from(expectedPlanet)));

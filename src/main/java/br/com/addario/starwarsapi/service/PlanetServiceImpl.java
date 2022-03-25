@@ -5,6 +5,7 @@ import br.com.addario.starwarsapi.exceptions.PlanetNotFoundException;
 import br.com.addario.starwarsapi.model.Planet;
 import br.com.addario.starwarsapi.model.PlanetDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -27,10 +28,12 @@ public class PlanetServiceImpl implements PlanetService {
         return planets.stream().map(PlanetDTO::from).toList();
     }
 
+    @SneakyThrows
     @Override
-    public PlanetDTO findPlanetById(Long id) {
-        var planetEntityOptional = planetDAO.findPlanetById(id);
-        return planetEntityOptional.map(PlanetDTO::from).orElseThrow(() -> new PlanetNotFoundException(id));
+    public PlanetDTO findPlanetById(Long id)  {
+        return planetDAO.findPlanetById(id)
+                        .map(PlanetDTO::from)
+                        .orElseThrow(() -> new PlanetNotFoundException(id));
     }
 
     @Override
