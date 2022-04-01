@@ -43,4 +43,10 @@ public class PlanetController {
         var planet = service.findPlanetById(id);
         return ResponseEntity.ok(planet);
     }
+
+    @DeleteMapping("/planets/{id}")
+    public ResponseEntity<PlanetDTO> deletePlanetById(@PathVariable(value = "id") long id) {
+        service.deletePlanetById(id);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -4,17 +4,21 @@ import br.com.addario.starwarsapi.dao.PlanetDAO;
 import br.com.addario.starwarsapi.exceptions.PlanetNotFoundException;
 import br.com.addario.starwarsapi.model.Planet;
 import br.com.addario.starwarsapi.model.PlanetDTO;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
 public class PlanetServiceImpl implements PlanetService {
 
     private final PlanetDAO planetDAO;
+
+    @Autowired
+    public PlanetServiceImpl(PlanetDAO planetDAO) {
+        this.planetDAO = planetDAO;
+    }
 
     @Override
     public void insert(PlanetDTO planetDTO) {
@@ -30,7 +34,7 @@ public class PlanetServiceImpl implements PlanetService {
 
     @SneakyThrows
     @Override
-    public PlanetDTO findPlanetById(Long id)  {
+    public PlanetDTO findPlanetById(Long id) {
         return planetDAO.findPlanetById(id)
                         .map(PlanetDTO::from)
                         .orElseThrow(() -> new PlanetNotFoundException(id));

@@ -1,29 +1,21 @@
 package br.com.addario.starwarsapi.controller;
 
-import br.com.addario.starwarsapi.dao.PlanetDAO;
 import br.com.addario.starwarsapi.model.PlanetDTO;
-import br.com.addario.starwarsapi.service.PlanetService;
-import org.aspectj.lang.annotation.Before;
+import br.com.addario.starwarsapi.service.PlanetServiceImpl;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,10 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PlanetControllerTest {
 
     @MockBean
-    private PlanetDAO dao;
-
-    @MockBean
-    private PlanetService service;
+    private PlanetServiceImpl service;
 
     @InjectMocks
     private PlanetController controller;
@@ -44,23 +33,6 @@ class PlanetControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(service);
-
-    }
-
-    @Test
-    void shouldCreateValidPlanetAndReturn201Code() {
-        var request = new MockHttpServletRequest();
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
-
-        var testPlanet = createPlanet(1L, "testPlanet");
-        var responseEntity = controller.createPlanet(testPlanet);
-
-        verify(service, times(1)).insert(any());
-        assertThat(responseEntity.getStatusCode().value()).isEqualTo(201);
-    }
 
     @Test
     void shouldFindAllAndReturnAListOfPlanets() throws Exception {
